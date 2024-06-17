@@ -1,0 +1,1 @@
+export const BACKEND_BASE_URL = "https://model-service-ldfuyzfodq-et.a.run.app";
