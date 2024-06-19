@@ -10,7 +10,6 @@ function CreateArticle() {
     useScript("/bundle/summernote/dist/summernote-bs4.js")
     useScript("/bundle/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js")
     useScript("/bundle/selectric/public/jquery.selectric.min.js")
-    useScript("/bundle/upload-preview/upload-preview.js")
     useScript("/js/page/features-post-create.js")
     
     const navigate = useNavigate()
