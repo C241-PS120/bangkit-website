@@ -1,5 +1,3 @@
-import "../../public/library/selectric/public/selectric.css";
-
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { DataTable, DataTableFilterMeta } from "primereact/datatable";
 import { SimpleArticleData, deleteArticle, getAllArticles } from "../api/article";

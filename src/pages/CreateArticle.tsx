@@ -1,7 +1,3 @@
-import "../../public/library/summernote/dist/summernote-bs4.css"
-import "../../public/library/selectric/public/selectric.css"
-import "../../public/library/bootstrap-tagsinput/dist/bootstrap-tagsinput.css"
-
 import { Link, useNavigate } from "react-router-dom"
 import { useRef, useState } from "react"
 

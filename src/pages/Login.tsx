@@ -1,5 +1,3 @@
-import "../../public/library/bootstrap-social/bootstrap-social.css";
-
 import login from "../api/login";
 import useAuth from "../store/Auth";
 import useLoginErrorStore from "../store/LoginError";
