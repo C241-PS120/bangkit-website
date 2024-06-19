@@ -1,81 +1,19 @@
 import "../../public/library/selectric/public/selectric.css";
 
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { DataTable, DataTableFilterMeta } from "primereact/datatable";
-import { SimpleArticleData, getAllArticles } from "../api/article";
-import { useEffect, useState } from "react";
+import { SimpleArticleData, deleteArticle, getAllArticles } from "../api/article";
+import { useEffect, useRef, useState } from "react";
 
 import { Column } from "primereact/column";
 import { FilterMatchMode } from "primereact/api";
 import { Link } from "react-router-dom";
+import { Toast } from "primereact/toast";
 import useScript from "../hooks/useScript";
 
-const dummyArticle = {
-    success: true,
-    data: [
-        {
-            article_id: 1,
-            title: "Rust",
-            image_url:
-                "https://storage.googleapis.com/c241-ps120-article/test1.png",
-            content:
-                "Rust in coffee is caused by the fungus Hemileia vastatrix. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-            category: "Fungal",
-            created_at: "2024-06-08T03:39:33Z",
-            updated_at: "2024-06-08T03:39:33Z",
-        },
-        {
-            article_id: 2,
-            title: "Blight",
-            image_url:
-                "https://storage.googleapis.com/c241-ps120-article/test2.png",
-            content:
-                "Blight in tomatoes is caused by the fungus Phytophthora infestans. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-            category: "Fungal",
-            created_at: "2024-06-08T03:39:33Z",
-            updated_at: "2024-06-08T03:39:33Z",
-        },
-        {
-            article_id: 3,
-            title: "Mosaic Virus",
-            image_url:
-                "https://storage.googleapis.com/c241-ps120-article/test3.jpg",
-            content:
-                "Mosaic virus affects cucumbers causing mottled leaves. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-            category: "Viral",
-            created_at: "2024-06-08T03:39:33Z",
-            updated_at: "2024-06-08T03:39:33Z",
-        },
-        {
-            article_id: 4,
-            title: "Leaf Spot",
-            image_url:
-                "https://storage.googleapis.com/c241-ps120-article/test4.jpg",
-            content:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-            category: "Fungal",
-            created_at: "2024-06-08T03:39:33Z",
-            updated_at: "2024-06-08T03:39:33Z",
-        },
-        {
-            article_id: 5,
-            title: "Healthy Coffe",
-            image_url:
-                "https://storage.googleapis.com/c241-ps120-article/test5.jpg",
-            content:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-            category: "Nutritional Deficiency",
-            created_at: "2024-06-08T03:39:33Z",
-            updated_at: "2024-06-13T07:35:51Z",
-        }
-    ],
-};
-
 function AllArticles() {
-    const importScript = [
-        "/library/selectric/public/jquery.selectric.min.js",
-        "/js/page/features-posts.js",
-    ];
-    useScript(importScript);
+    useScript("/library/selectric/public/jquery.selectric.min.js");
+    useScript("/js/page/features-posts.js");
 
     const [article, setArticle] = useState<SimpleArticleData[]>([]);
     const [filter, setFilter] = useState<DataTableFilterMeta>({
@@ -85,8 +23,7 @@ function AllArticles() {
 
     useEffect(() => {
         async function fetchData() {
-            // const response = await getAllArticles()
-            const response = dummyArticle;
+            const response = await getAllArticles();
             setArticle(response.data);
         }
         if (article.length > 1) {
@@ -102,22 +39,26 @@ function AllArticles() {
             <>
                 {rowData.title}
                 <div className="table-links">
-                    <Link to={"view/" + rowData.article_id.toString()}>View</Link>
-                    <div className="bullet"></div>
-                    <Link to={"update/" + rowData.article_id.toString()}>
-                        Edit
+                    <Link to={"view/" + rowData.article_id.toString()}>
+                        View
                     </Link>
                     <div className="bullet"></div>
-                    <Link to={""} className="text-danger">
+                    <a
+                        onClick={(e) => {
+                            e.preventDefault;
+                            confirmDialogDelete(rowData.article_id);
+                        }}
+                        className="text-danger"
+                    >
                         Delete
-                    </Link>
+                    </a>
                 </div>
             </>
         );
     };
 
     const contentBodyTemplate = (rowData: SimpleArticleData) => {
-        return <p className="mt-3 mr-3">{rowData.content.replace(/^(.{100}[^\s]*).*/, "$1")}...</p>;
+        return <p>{rowData.content.replace(/^(.{100}[^\s]*).*/, "$1")}...</p>;
     };
 
     const createAtBodyTemplate = (rowData: SimpleArticleData) => {
@@ -140,24 +81,23 @@ function AllArticles() {
                 rows={5}
                 dataKey="article_id"
                 stripedRows
-                showGridlines
                 filters={filter}
                 loading={loading}
                 globalFilterFields={["title"]}
                 emptyMessage="No article found."
-                tableStyle={{ maxWidth: "100%"}}
+                tableStyle={{ maxWidth: "100%" }}
                 paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
             >
                 <Column
                     field="title"
                     header="Title"
-                    style={{ width: "30%", margin: "0.25rem" }}
+                    style={{ width: "20%", margin: "0.25rem" }}
                     body={titleBodyTemplate}
                 />
                 <Column
-                    field="category"
-                    header="Category"
-                    style={{ minWidth: "10%", margin: "0.25rem" }}
+                    field="disease"
+                    header="Disease"
+                    style={{ minWidth: "20%", margin: "0.25rem" }}
                 />
                 <Column
                     field="content"
@@ -173,6 +113,42 @@ function AllArticles() {
                 />
             </DataTable>
         );
+    };
+
+    const toast = useRef<Toast>(null);
+
+    const acceptDeleteHandler = async (id: number) => {
+        try{
+            await deleteArticle(id)
+            toast.current?.show({
+                severity: "success",
+                summary: "success",
+                detail: "Article has been deleted",
+                life: 3000,
+            });
+
+            setArticle((await getAllArticles()).data)
+        } catch (e){
+            toast.current?.show({
+                severity: "error",
+                summary: "error",
+                detail: "Error Occured when deleting the article",
+                life: 3000,
+            });
+        }
+    };
+
+    const confirmDialogDelete = (id: number) => {
+        confirmDialog({
+            message: "Do you want to delete this record?",
+            header: "Delete Confirmation",
+            icon: "pi pi-info-circle",
+            defaultFocus: "reject",
+            acceptClassName: "p-button-danger",
+            accept: () => {
+                acceptDeleteHandler(id);
+            },
+        });
     };
 
     const filterHandler = (value: string) => {
@@ -196,8 +172,8 @@ function AllArticles() {
                 <div className="section-body">
                     <h2 className="section-title">Articles</h2>
                     <p className="section-lead">
-                        You can manage all Articles, such as editing, deleting and
-                        more.
+                        You can manage all Articles, such as editing, deleting
+                        and more.
                     </p>
 
                     <div className="row mt-4">
@@ -231,7 +207,8 @@ function AllArticles() {
                                     </div>
 
                                     <div className="clearfix mb-3"></div>
-
+                                    <Toast ref={toast} style={{zIndex: 99}}/>
+                                    <ConfirmDialog />
                                     <div className="mr-2 ml-2 mb-5">
                                         {renderDataTable()}
                                     </div>

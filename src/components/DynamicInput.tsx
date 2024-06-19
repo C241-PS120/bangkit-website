@@ -39,6 +39,7 @@ function DynamicInput(
                         className="summernote-simple mb-2 mt-2 col-8 col-sm-10"
                         name="data"
                         style={{ width: "100%" }}
+                        required={true}
                     ></textarea>
 
                     {index === state.length - 1 && (

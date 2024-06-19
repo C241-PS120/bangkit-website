@@ -1,19 +1,17 @@
 import { useEffect } from "react";
 
-const useScript = (source: Array<string>) => {
+const useScript = (source: string) => {
     useEffect(() => {
-        source.forEach((src) => {
             const script = document.createElement('script');
-            script.src = src;
+            script.src = source;
             script.async = true;
     
             document.body.appendChild(script);
     
             return () => {
-            document.body.removeChild(script);
+                document.body.removeChild(script);
             }
-        })
-      }, [source]);
+      }, []);
 }
 
 export default useScript

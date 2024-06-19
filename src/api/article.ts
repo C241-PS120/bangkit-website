@@ -12,9 +12,9 @@ export interface SimpleArticleData {
     title: string,
     image_url: string,
     content: string,
-    category: string,
     created_at: string,
     updated_at: string,
+    disease: string
 }
 
 export interface DetailArticleData {
@@ -22,11 +22,14 @@ export interface DetailArticleData {
     title: string,
     image_url: string,
     content: string,
-    category: string,
-    cause: string
+    disease: string,
+    cause: string,
+    label: string,
+    symptom_summary: string,
     symptoms: Array<string>
     preventions: Array<string>
-    treatments: TreatmentData
+    treatments: TreatmentData,
+    plants: Array<string>,
     created_at: string,
     updated_at: string,
 }
@@ -37,6 +40,12 @@ interface ResponseAllArticles{
 
 interface ResponseArticle{
     data: DetailArticleData
+}
+
+interface ResponseCreateArticle{
+    success: string,
+    message?: string,
+    error?: string,
 }
 
 const axiosInstance = axios.create({
@@ -57,4 +66,16 @@ async function getArticle(id: number): Promise<ResponseArticle>{
     return resData
 }
 
-export {getAllArticles, getArticle}
+async function createArticle(formData: FormData): Promise<ResponseCreateArticle> {
+    const response = await axiosInstance.post("/articles", formData, {headers: { "Content-Type": "multipart/form-data" }})
+    const resData = <ResponseCreateArticle>response.data
+    return resData 
+}
+
+async function deleteArticle(id: number): Promise<ResponseCreateArticle> {
+    const response = await axiosInstance.delete("/articles/" + id)
+    const resData = <ResponseCreateArticle>response.data
+    return resData 
+}
+
+export {getAllArticles, getArticle, createArticle, deleteArticle}

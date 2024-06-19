@@ -1,4 +1,5 @@
 import "./index.css";
+import "primereact/resources/themes/lara-light-indigo/theme.css";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
@@ -9,7 +10,6 @@ import Login from "./pages/Login.tsx";
 import Main from "./layouts/Main.tsx";
 import { PrimeReactProvider } from "primereact/api";
 import ReactDOM from "react-dom/client";
-import UpdateArticle from "./pages/UpdateArticle.tsx";
 import ViewArticle from "./pages/ViewArticle.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -26,10 +26,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                     <Route
                         path="view/:articleId"
                         element={<Main Page={ViewArticle} />}
-                    />
-                    <Route
-                        path="update/:articleId"
-                        element={<Main Page={UpdateArticle} />}
                     />
                 </Route>
             </Routes>

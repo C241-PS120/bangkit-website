@@ -2,50 +2,19 @@ import { DetailArticleData, TreatmentData, getArticle } from "../api/article";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-const dummyArticle = {
-    success: true,
-    data: {
-        article_id: 1,
-        title: "Rust",
-        image_url:
-            "https://storage.googleapis.com/c241-ps120-article/692e46272db5471641d2789a52df6db0.jpg",
-        content:
-            "Rust in coffee is caused by the fungus Hemileia vastatrix. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-        category: "Fungal",
-        cause: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-        symptoms: [
-            "Yellow spots on the underside of leaves, eventually turning brown and causing defoliation.",
-            "Orange, powdery pustules on leaves, stems, and fruit.",
-            "Leaf curling and stunted growth.",
-            "Premature leaf drop and reduced yield.",
-        ],
-        preventions: [
-            "Plant resistant coffee varieties and apply fungicides.",
-            "Prune infected branches and remove fallen leaves to reduce spore spread.",
-            "Avoid overhead watering and provide adequate air circulation.",
-            "Apply copper-based fungicides and practice crop rotation.",
-        ],
-        treatments: {
-            chemical:
-                "Apply copper-based fungicides. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-            organic:
-                "Use neem oil spray. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        },
-        created_at: "2024-06-08T03:39:33Z",
-        updated_at: "2024-06-08T03:39:33Z",
-    },
-};
-
 const initialStateArticle = {
     article_id: 0,
     title: "",
     image_url: "",
     content: "",
-    category: "",
+    disease: "",
+    label: "",
     cause: "",
+    symptom_summary: "",
     symptoms: [],
     preventions: [],
     treatments: new Object(),
+    plants: [],
     created_at: "",
     updated_at: "",
 };
@@ -99,8 +68,8 @@ function ViewArticle() {
 
     useEffect(() => {
         async function fetchData() {
-            // const response = await getArticle(Number(articleId))
-            const response = dummyArticle;
+            const response = await getArticle(Number(articleId))
+            // const response = dummyArticle;
             setArticle(response.data);
         }
         fetchData().then(() => {
@@ -161,7 +130,7 @@ function ViewArticle() {
                                                     <h2>{article.title}</h2>
                                                 </div>
                                                 <div className="text-secondary row mb-3">
-                                                    <h6>{article.category}</h6>
+                                                    <h6>{article.label}</h6>
                                                 </div>
 
                                                 <div className="row mb-3">
@@ -186,6 +155,8 @@ function ViewArticle() {
 
                                                 <div className="row mb-3">
                                                     <p>{article.content}</p>
+                                                    <p>{article.symptom_summary}</p>
+                                                    <p className="text-muted">Disebabkan oleh {article.cause}</p>
                                                 </div>
 
                                                 <div className="row mb-3">
@@ -212,6 +183,20 @@ function ViewArticle() {
                                                         {TreatmentComponent(
                                                             article.treatments
                                                         )}
+                                                    </div>
+                                                </div>
+
+                                                <div className="row mb-3">
+                                                    <h5>
+                                                        Tanaman yang terinfeksi
+                                                    </h5>
+                                                    <div className="col-12">
+                                                        <ul>
+                                                            {ListComponent(
+                                                                article.plants,
+                                                                "plant"
+                                                            )}
+                                                        </ul>
                                                     </div>
                                                 </div>
                                             </div>
