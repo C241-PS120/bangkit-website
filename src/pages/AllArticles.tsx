@@ -10,7 +10,7 @@ import { Toast } from "primereact/toast";
 import useScript from "../hooks/useScript";
 
 function AllArticles() {
-    useScript("/library/selectric/public/jquery.selectric.min.js");
+    useScript("/bundle/selectric/public/jquery.selectric.min.js");
     useScript("/js/page/features-posts.js");
 
     const [article, setArticle] = useState<SimpleArticleData[]>([]);
