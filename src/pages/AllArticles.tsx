@@ -24,7 +24,7 @@ function AllArticles() {
             const response = await getAllArticles();
             setArticle(response.data);
         }
-        if (article.length > 1) {
+        if (article.length > 0) {
             setLoading(false);
         } else {
             fetchData();
