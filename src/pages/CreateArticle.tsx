@@ -196,7 +196,7 @@ function CreateArticle() {
                                         </div>
                                     </div>
                                     <div className="form-group row mb-4">
-                                        <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Preventions</label>
+                                        <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Pencegahan</label>
                                         <div className="col-sm-12 col-md-7">
                                             {DynamicInput(preventions, setPreventions)}
                                         </div>
